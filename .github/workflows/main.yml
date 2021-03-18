@@ -31,6 +31,17 @@ jobs:
           github_token: ${{ github.token }}
       - run: mkdir -p output/
       - run: echo "This is fancy a comment" > output/results.txt
+      - uses: actions/github-script@v3
+        if: success() || failure()
+        env:
+          VALIDATE: "${{ steps.validate.outputs.stderr }}\n${{ steps.validate.outputs.stdout }}"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            echo `#### PR Checking - \`${{ steps.validate.outcome }}\`
+              <details><summary>Show Validate</summary>
+                \`\`\`${process.env.VALIDATE}\`\`\`
+              </details> > output/results.txt
       - name: comment PR
         uses: machine-learning-apps/pr-comment@master
         env:
