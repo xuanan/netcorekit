@@ -16,5 +16,9 @@ jobs:
           CONFIG_PATH: ${{ secrets.GITHUB_WORKSPACE }}/.github/label-pr.yml
       - name: DevSkim
         uses: microsoft/DevSkim-Action@v1
+        with:
+          should-scan-archives: false
+          output-filename: devskim-results.sarif
+          output-directory: prscan
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
